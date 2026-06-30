@@ -7,10 +7,16 @@
   <title>AnonTalk — Messagerie anonyme</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='3' y='8' width='42' height='27' rx='9' fill='%230077cc'/%3E%3Cpath d='M13 35 L13 43 L21 35' fill='%230077cc'/%3E%3Crect x='11' y='17' width='11' height='6' rx='3' fill='white'/%3E%3Crect x='26' y='17' width='11' height='6' rx='3' fill='white'/%3E%3Crect x='22' y='19' width='4' height='2' fill='white'/%3E%3C/svg%3E">
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       min-height: 100vh;
       margin: 0;
       background: #f9f9f9;
@@ -22,7 +28,6 @@
       width: 100%;
       max-width: 700px;
       padding: 20px;
-      box-sizing: border-box;
     }
 
     /* ---- Marque / logo ---- */
@@ -30,9 +35,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-      animation: fadeIn 1s ease-in;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
     .brand-logo {
@@ -43,6 +47,12 @@
       height: 56px;
       border-radius: 16px;
       background: #eaf3ff;
+    }
+
+    .brand-logo img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
     }
 
     .brand-name {
@@ -79,7 +89,6 @@
     h1 {
       text-align: center;
       color: #333;
-      animation: fadeIn 1s ease-in;
     }
 
     h1.small {
@@ -89,10 +98,11 @@
     p.sub {
       text-align: center;
       color: #666;
-      margin-top: -10px;
+      margin-top: -5px;
+      margin-bottom: 15px;
     }
 
-    /* ---- Instructions d'utilisation ---- */
+    /* ---- Instructions ---- */
     .instructions {
       background: #fffaf0;
       border: 1px solid #f1e3c2;
@@ -157,6 +167,23 @@
       background-color: #777;
     }
 
+    button.google-btn {
+      background: #4285f4;
+      color: white;
+      padding: 12px 40px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      cursor: pointer;
+      display: block;
+      margin: 15px auto;
+      width: fit-content;
+    }
+
+    button.google-btn:hover {
+      background: #3367d6;
+    }
+
     input, textarea {
       font-family: inherit;
       font-size: 1em;
@@ -177,26 +204,27 @@
       padding: 15px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      animation: fadeIn 0.8s ease-in-out;
     }
 
     .person h2 {
       margin-top: 0;
       color: #215ce6;
+      font-size: 1.1em;
     }
 
     .message {
       background-color: #f0f0f0;
-      padding: 8px;
+      padding: 8px 12px;
       border-radius: 6px;
       margin: 5px 0;
       white-space: pre-wrap;
       word-wrap: break-word;
+      font-size: 0.95em;
     }
 
     .message.mine {
       background-color: #d4edda;
-      border: 1px solid #28a745;
+      border-left: 4px solid #28a745;
     }
 
     #chart {
@@ -220,17 +248,7 @@
       justify-content: flex-end;
       align-items: center;
       padding-bottom: 5px;
-      animation: growBar 1s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-
-    @keyframes growBar {
-      from {height: 0;}
-      to {height: var(--height);}
+      transition: height 0.5s ease;
     }
 
     /* ---- Canaux ---- */
@@ -238,7 +256,7 @@
       background: #fff;
       border-radius: 10px;
       padding: 20px;
-      margin: 20px 0;
+      margin: 15px 0;
       box-shadow: 0 0 10px rgba(0,0,0,0.08);
       text-align: center;
     }
@@ -334,22 +352,21 @@
       margin: 0 auto;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
     }
 
     .main-header .brand {
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
       margin: 0;
-      animation: none;
     }
 
     .main-header .brand-logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
       background: #eaf3ff;
       display: flex;
       align-items: center;
@@ -357,19 +374,18 @@
     }
 
     .main-header .brand-logo img {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       object-fit: contain;
     }
 
     .main-header .brand-name {
-      font-size: 1.4em;
+      font-size: 1.3em;
       margin: 0;
     }
 
     #userDisplay {
-      margin-left: auto;
-      font-size: 0.8em;
+      font-size: 0.75em;
       color: #555;
       display: flex;
       align-items: center;
@@ -380,75 +396,69 @@
     }
 
     #userDisplay img {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       border: 2px solid #0077cc;
     }
 
-    /* ---- Login prompt ---- */
-    #loginPrompt {
+    .user-email {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #loginSection {
       text-align: center;
-      padding: 15px;
-      background: #fff3cd;
-      border-radius: 10px;
       margin: 10px 0;
-      border: 1px solid #ffc107;
     }
 
-    #loginPrompt p {
-      margin: 0 0 10px 0;
-      color: #856404;
+    #loginStatus {
+      text-align: center;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      font-size: 0.95em;
     }
 
-    #loginPrompt button {
-      background: #4285f4;
-      color: white;
-      padding: 10px 30px;
-      border: none;
-      border-radius: 5px;
-      font-size: 1em;
-      cursor: pointer;
+    #loginStatus.loading {
+      background: #e3f2fd;
+      color: #0d47a1;
     }
 
-    #loginPrompt button:hover {
-      background: #3367d6;
+    #loginStatus.connected {
+      background: #e8f5e9;
+      color: #1b5e20;
+    }
+
+    #loginStatus.error {
+      background: #ffebee;
+      color: #b71c1c;
     }
 
     @media (max-width: 600px) {
       body {
-        align-items: flex-start;
-        padding-top: 70px;
+        padding-top: 65px;
       }
 
       .container {
-        padding: 16px;
-        min-height: 100vh;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-      }
-
-      #landingSection {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 10px 0;
+        padding: 12px;
       }
 
       .brand-name {
-        font-size: 1.6em;
+        font-size: 1.4em;
       }
 
       .landing-card {
-        padding: 22px 18px;
+        padding: 18px 15px;
+        margin: 12px 0;
       }
 
       button {
         width: 100%;
-        font-size: 1.1em;
-        padding: 13px 20px;
+        font-size: 1em;
+        padding: 12px 20px;
       }
 
       #actions {
@@ -458,22 +468,20 @@
 
       #search {
         width: 100%;
-        box-sizing: border-box;
       }
 
       .landing-card input {
         width: 100%;
-        box-sizing: border-box;
       }
 
       #userDisplay {
-        font-size: 0.7em;
+        font-size: 0.65em;
         padding: 3px 8px 3px 5px;
       }
 
       #userDisplay img {
-        width: 22px;
-        height: 22px;
+        width: 20px;
+        height: 20px;
       }
 
       .main-header .brand-name {
@@ -481,13 +489,17 @@
       }
 
       .main-header .brand-logo {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
       }
 
       .main-header .brand-logo img {
-        width: 28px;
-        height: 28px;
+        width: 24px;
+        height: 24px;
+      }
+
+      .user-email {
+        max-width: 100px;
       }
     }
   </style>
@@ -503,9 +515,13 @@
     <div class="header-content">
       <div class="brand">
         <div class="brand-logo">
-          <img src="image/im.jpeg" alt="Logo" width="40" height="40">
+          <img src="image/im.jpeg" alt="Logo" width="32" height="32">
         </div>
         <h1 class="brand-name">Anon<span>Talk</span></h1>
+      </div>
+      <div id="userDisplay" style="display:none;">
+        <span class="user-email"></span>
+        <img src="" alt="Avatar">
       </div>
     </div>
   </header>
@@ -520,9 +536,19 @@
         </div>
         <h1 class="brand-name">Anon<span>Talk</span></h1>
       </div>
-      <div class="badge-anonyme" style="display:flex; margin-left:auto; margin-right:auto;">100% anonyme — aucune inscription requise</div>
+      <div class="badge-anonyme">100% anonyme — aucune inscription requise</div>
 
       <p class="sub">Crée un canal pour ta classe/groupe, ou rejoins-en un avec son identifiant.</p>
+
+      <!-- Status de connexion -->
+      <div id="loginStatus" class="loading">🔄 Vérification de la connexion...</div>
+
+      <!-- Bouton de connexion -->
+      <div id="loginSection" style="display:none;">
+        <button class="google-btn" onclick="window.signInWithGoogle()">
+          🔐 Se connecter avec Google
+        </button>
+      </div>
 
       <div class="landing-card">
         <h2>🆕 Créer un nouveau canal</h2>
@@ -541,52 +567,52 @@
     <!-- ===== MODALE : CANAL CRÉÉ AVEC SUCCÈS ===== -->
     <div id="channelCreatedModal" class="modal-overlay" style="display:none;">
       <div class="modal-box">
-        <h2>Canal créé !</h2>
+        <h2>✅ Canal créé !</h2>
         <p>Voici l'identifiant à envoyer à tes camarades :</p>
         <div id="createdId"></div>
         <div id="createdLink"></div>
-        <button onclick="copyCreatedLink()">Copier le lien</button>
+        <button onclick="copyCreatedLink()">📋 Copier le lien</button>
         <br><br>
-        <button class="secondary" onclick="enterChannelFromModal()">Entrer dans le canal</button>
+        <button class="secondary" onclick="enterChannelFromModal()">🚪 Entrer dans le canal</button>
       </div>
     </div>
 
     <!-- ===== APPLICATION (à l'intérieur d'un canal) ===== -->
     <div id="appSection" style="display:none;">
       <div id="channelBar">
-        <span>Canal : <span id="currentChannelLabel"></span></span>
+        <span>📢 Canal : <span id="currentChannelLabel"></span></span>
         <div>
-          <button class="secondary" onclick="copyCurrentLink()">Copier le lien</button>
-          <button class="secondary" onclick="quitChannel()">Changer de canal</button>
+          <button class="secondary" onclick="copyCurrentLink()">📋 Copier le lien</button>
+          <button class="secondary" onclick="quitChannel()">🚪 Changer de canal</button>
         </div>
       </div>
 
       <h1 class="small">Anon<span style="color:#0077cc;">Talk</span></h1>
 
       <div class="instructions">
-        <strong>Comment ça marche dans ce canal ?</strong>
+        <strong>📖 Comment ça marche ?</strong>
         <ul>
-          <li>📝 Pour <strong>écrire un message</strong> : cliquez sur <span class="pill">Écrire un message</span>, indiquez le nom de la personne à qui vous voulez adresser votre message, puis rédigez votre texte et envoyez-le.</li>
-          <li>📖 Pour <strong>lire les messages</strong> : cliquez sur <span class="pill">Lire les messages</span>. Vous pouvez aussi utiliser la barre de recherche pour taper directement un nom et voir uniquement les messages qui lui sont adressés.</li>
+          <li>📝 Pour <strong>écrire</strong> : cliquez sur <span class="pill">Écrire un message</span>, indiquez le nom du destinataire, rédigez et envoyez.</li>
+          <li>📖 Pour <strong>lire</strong> : cliquez sur <span class="pill">Lire les messages</span>. Utilisez la barre de recherche pour filtrer par nom.</li>
         </ul>
       </div>
 
       <div id="actions">
-        <button onclick="showWrite()">Écrire un message</button>
-        <button onclick="showRead()">Lire les messages</button>
+        <button onclick="showWrite()">✏️ Écrire un message</button>
+        <button onclick="showRead()">📖 Lire les messages</button>
       </div>
 
-      <input type="text" id="search" oninput="filterNames()" placeholder="Rechercher un nom...">
+      <input type="text" id="search" oninput="filterNames()" placeholder="🔍 Rechercher un nom...">
 
       <div id="writeSection" style="display:none;">
-        <h2>Écrire un message</h2>
-        <input id="targetName" placeholder="Nom du camarade" />
-        <textarea id="messageInput" placeholder="Ton message..." rows="4" style="width: 100%; margin-top: 10px; box-sizing: border-box;"></textarea>
-        <button onclick="addMessage()">Envoyer</button>
+        <h2>✏️ Écrire un message</h2>
+        <input id="targetName" placeholder="👤 Nom du camarade" />
+        <textarea id="messageInput" placeholder="💬 Ton message..." rows="4" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; resize: vertical;"></textarea>
+        <button onclick="addMessage()">📤 Envoyer</button>
       </div>
 
       <div id="readSection" style="display:none;"></div>
-      <div id="chart"></div>
+      <div id="chart" style="display:none;"></div>
     </div>
 
   </div>
@@ -594,8 +620,9 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getDatabase, ref, push, set, onValue, get, off, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
+    // ===== CONFIGURATION FIREBASE =====
     const firebaseConfig = {
       apiKey: "AIzaSyCEGRun9252XubXes04HWXIMd81Y7KRdHY",
       authDomain: "message-anonym.netlify.app",
@@ -611,19 +638,27 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    let data = {};
+    // ===== VARIABLES GLOBALES =====
+    let currentUser = null;
     let currentChannel = null;
     let messagesListenerRef = null;
-    let currentUser = null;
 
+    // ===== MOTS INTERDITS =====
     const motsInterdits = [
-      "con", "merde", "putain", "enculé", "salope", "nique", "fdp", "bâtard", "raciste", "suicide", "connard", "connasse", "imbécile", "débile", "crétin", "idiot",
-      "nul", "minable", "taré", "batard", "fils de pute", "ta gueule", "pédé", "tapette", "gouine", "sale", "clochard", "raté", "looser", "handicapé", "abruti", "branleur",
-      "crève", "bougnoule", "négro", "esclave", "porc", "déchet", "mongol", "traînée", "jaloux", "idiote", "truand", "pauvre type", "toxique", "insecte", "zéro", "chieur", "baltringue",
-      "bite", "chatte", "seins", "sucer", "baise", "ahoco", "cul", "fesses", "pétasse", "woubi", "tête de", "trop laide", "trop moche", "poitrine de pigeon", "front de brique",
-      "voix de fille", "coiffure champignon", "champignon", "ressemble à Jeronime", "tu fais trop la meuf", "le vieux", "le pépé", "champ", "balthazar", "petit déjeuner 100f",
-      "sale noir", "sale blanc", "les kpakis", "côte de poisson chat", "je vais te marabouter", "je vais te frapper", "je te balance", "je vais sortir tous les secrets",
-      "t'es mort", "on va te chaptitude", "enfant à Jésus", "prophétique", "tu fais trop la sainte",
+      "con", "merde", "putain", "enculé", "salope", "nique", "fdp", "bâtard", "raciste", "suicide",
+      "connard", "connasse", "imbécile", "débile", "crétin", "idiot", "nul", "minable", "taré",
+      "batard", "fils de pute", "ta gueule", "pédé", "tapette", "gouine", "sale", "clochard",
+      "raté", "looser", "handicapé", "abruti", "branleur", "crève", "bougnoule", "négro",
+      "esclave", "porc", "déchet", "mongol", "traînée", "jaloux", "idiote", "truand",
+      "pauvre type", "toxique", "insecte", "zéro", "chieur", "baltringue", "bite", "chatte",
+      "seins", "sucer", "baise", "ahoco", "cul", "fesses", "pétasse", "woubi", "tête de",
+      "trop laide", "trop moche", "poitrine de pigeon", "front de brique", "voix de fille",
+      "coiffure champignon", "champignon", "ressemble à Jeronime", "tu fais trop la meuf",
+      "le vieux", "le pépé", "champ", "balthazar", "petit déjeuner 100f", "sale noir",
+      "sale blanc", "les kpakis", "côte de poisson chat", "je vais te marabouter",
+      "je vais te frapper", "je te balance", "je vais sortir tous les secrets",
+      "t'es mort", "on va te chaptitude", "enfant à Jésus", "prophétique",
+      "tu fais trop la sainte"
     ];
 
     function contientMotsInterdits(message) {
@@ -631,78 +666,37 @@
       return motsInterdits.some(mot => msg.includes(mot));
     }
 
-    // ===================== AUTHENTIFICATION =====================
+    // ===== AUTHENTIFICATION =====
 
-    async function signInSilently() {
-      try {
-        const result = await signInWithPopup(auth, provider);
-        currentUser = result.user;
-        console.log("Utilisateur connecté:", currentUser.email);
-        document.getElementById('loginPrompt')?.remove();
-        updateUserDisplay();
-        return currentUser;
-      } catch (error) {
-        if (error.code === 'auth/popup-blocked') {
-          console.log("Popup bloqué");
-        } else if (error.code === 'auth/cancelled-popup-request') {
-          console.log("Connexion annulée");
-        } else {
-          console.error("Erreur de connexion:", error);
-          showLoginButton();
-        }
-        return null;
+    // Fonction de connexion avec redirection
+    window.signInWithGoogle = function() {
+      const status = document.getElementById('loginStatus');
+      status.className = 'loading';
+      status.textContent = '🔄 Redirection vers Google...';
+      signInWithRedirect(auth, provider);
+    };
+
+    // Mettre à jour l'affichage de l'utilisateur
+    function updateUserDisplay(user) {
+      const display = document.getElementById('userDisplay');
+      if (user) {
+        display.style.display = 'flex';
+        display.querySelector('.user-email').textContent = user.email;
+        display.querySelector('img').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=0077cc&color=fff&size=32`;
+        document.getElementById('loginSection').style.display = 'none';
+        const status = document.getElementById('loginStatus');
+        status.className = 'connected';
+        status.textContent = '✅ Connecté avec ' + user.email;
+      } else {
+        display.style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+        const status = document.getElementById('loginStatus');
+        status.className = 'error';
+        status.textContent = '🔐 Non connecté';
       }
     }
 
-    function showLoginButton() {
-      const landingSection = document.getElementById('landingSection');
-      if (document.getElementById('loginPrompt')) return;
-      
-      const loginPrompt = document.createElement('div');
-      loginPrompt.id = 'loginPrompt';
-      loginPrompt.innerHTML = `
-        <p>🔐 Veuillez vous connecter avec Google pour utiliser l'application</p>
-        <button onclick="window.signInWithGoogle()">Se connecter avec Google</button>
-      `;
-      landingSection.prepend(loginPrompt);
-    }
-
-    window.signInWithGoogle = async function() {
-      try {
-        const result = await signInWithPopup(auth, provider);
-        currentUser = result.user;
-        document.getElementById('loginPrompt')?.remove();
-        updateUserDisplay();
-        console.log("Connecté:", currentUser.email);
-        if (currentChannel) {
-          renderMessages();
-        }
-      } catch (error) {
-        console.error("Erreur de connexion:", error);
-        alert("Erreur de connexion. Veuillez réessayer.");
-      }
-    }
-
-    function updateUserDisplay() {
-      const header = document.querySelector('.header-content');
-      let userDisplay = document.getElementById('userDisplay');
-      
-      if (userDisplay) {
-        userDisplay.remove();
-      }
-      
-      if (currentUser) {
-        userDisplay = document.createElement('div');
-        userDisplay.id = 'userDisplay';
-        userDisplay.innerHTML = `
-          <span>📧 ${currentUser.email}</span>
-          <img src="${currentUser.photoURL || 'https://ui-avatars.com/api/?name=' + currentUser.email}" alt="Avatar">
-        `;
-        header.appendChild(userDisplay);
-      }
-    }
-
-    // ===================== GESTION DES CANAUX =====================
+    // ===== GESTION DES CANAUX =====
 
     function genererIdCanal(longueur = 6) {
       const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -720,10 +714,31 @@
       return url.toString();
     }
 
-    window.createChannel = async function () {
+    function entrerDansCanal(id) {
+      currentChannel = id;
+      localStorage.setItem('canalActif', id);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set("canal", id);
+      history.replaceState(null, "", url.toString());
+
+      document.getElementById('currentChannelLabel').textContent = id;
+      document.getElementById('landingSection').style.display = 'none';
+      document.getElementById('appSection').style.display = 'block';
+      document.getElementById('writeSection').style.display = 'none';
+      document.getElementById('readSection').style.display = 'none';
+      document.getElementById('chart').style.display = 'none';
+      document.getElementById('chart').innerHTML = '';
+      document.getElementById('readSection').innerHTML = '';
+
+      if (currentUser) {
+        renderMessages();
+      }
+    }
+
+    window.createChannel = async function() {
       if (!currentUser) {
         alert("Veuillez vous connecter avec Google avant de créer un canal.");
-        window.signInWithGoogle();
         return;
       }
 
@@ -734,7 +749,7 @@
           createdBy: currentUser.email
         });
       } catch (e) {
-        alert("Erreur lors de la création du canal. Réessaie.");
+        alert("Erreur lors de la création du canal.");
         console.error(e);
         return;
       }
@@ -743,27 +758,11 @@
       document.getElementById('createdLink').textContent = lienPourCanal(id);
       document.getElementById('createdLink').dataset.channel = id;
       document.getElementById('channelCreatedModal').style.display = 'flex';
-    }
+    };
 
-    window.copyCreatedLink = function () {
-      const lien = document.getElementById('createdLink').textContent;
-      navigator.clipboard.writeText(lien).then(() => {
-        alert("Lien copié !");
-      }).catch(() => {
-        alert("Impossible de copier automatiquement. Lien : " + lien);
-      });
-    }
-
-    window.enterChannelFromModal = function () {
-      const id = document.getElementById('createdId').textContent;
-      document.getElementById('channelCreatedModal').style.display = 'none';
-      entrerDansCanal(id);
-    }
-
-    window.joinChannel = async function () {
+    window.joinChannel = async function() {
       if (!currentUser) {
         alert("Veuillez vous connecter avec Google avant de rejoindre un canal.");
-        window.signInWithGoogle();
         return;
       }
 
@@ -783,29 +782,9 @@
       }
 
       entrerDansCanal(idInput);
-    }
+    };
 
-    function entrerDansCanal(id) {
-      currentChannel = id;
-      localStorage.setItem('canalActif', id);
-
-      const url = new URL(window.location.href);
-      url.searchParams.set("canal", id);
-      history.replaceState(null, "", url.toString());
-
-      document.getElementById('currentChannelLabel').textContent = id;
-      document.getElementById('landingSection').style.display = 'none';
-      document.getElementById('channelCreatedModal').style.display = 'none';
-      document.getElementById('appSection').style.display = 'block';
-
-      document.getElementById('writeSection').style.display = 'none';
-      document.getElementById('readSection').style.display = 'none';
-      document.getElementById('chart').style.display = 'none';
-      document.getElementById('chart').innerHTML = '';
-      document.getElementById('readSection').innerHTML = '';
-    }
-
-    window.quitChannel = function () {
+    window.quitChannel = function() {
       if (messagesListenerRef) {
         off(messagesListenerRef);
         messagesListenerRef = null;
@@ -820,45 +799,59 @@
       document.getElementById('appSection').style.display = 'none';
       document.getElementById('landingSection').style.display = 'block';
       document.getElementById('joinChannelInput').value = '';
-    }
+    };
 
-    window.copyCurrentLink = function () {
+    window.copyCreatedLink = function() {
+      const lien = document.getElementById('createdLink').textContent;
+      navigator.clipboard.writeText(lien).then(() => {
+        alert("Lien copié !");
+      }).catch(() => {
+        alert("Lien : " + lien);
+      });
+    };
+
+    window.copyCurrentLink = function() {
       if (!currentChannel) return;
       const lien = lienPourCanal(currentChannel);
       navigator.clipboard.writeText(lien).then(() => {
         alert("Lien copié !");
       }).catch(() => {
-        alert("Impossible de copier automatiquement. Lien : " + lien);
+        alert("Lien : " + lien);
       });
-    }
+    };
 
-    // ===================== APPLICATION (messages) =====================
+    window.enterChannelFromModal = function() {
+      const id = document.getElementById('createdId').textContent;
+      document.getElementById('channelCreatedModal').style.display = 'none';
+      entrerDansCanal(id);
+    };
 
-    window.showWrite = function () {
+    // ===== MESSAGES =====
+
+    window.showWrite = function() {
       document.getElementById('writeSection').style.display = 'block';
       document.getElementById('readSection').style.display = 'none';
       document.getElementById('chart').style.display = 'none';
-    }
+    };
 
-    window.showRead = function () {
+    window.showRead = function() {
       renderMessages();
       document.getElementById('writeSection').style.display = 'none';
       document.getElementById('readSection').style.display = 'block';
       document.getElementById('chart').style.display = 'flex';
-    }
+    };
 
-    window.addMessage = function () {
+    window.addMessage = function() {
       if (!currentChannel) {
         alert("Vous n'êtes dans aucun canal.");
         return;
       }
-      
+
       if (!currentUser) {
         alert("Veuillez vous connecter avec Google avant d'envoyer un message.");
-        window.signInWithGoogle();
         return;
       }
-      
+
       const name = document.getElementById('targetName').value.trim();
       const msg = document.getElementById('messageInput').value.trim();
 
@@ -870,7 +863,7 @@
       }
 
       const messageRef = push(ref(db, 'channels/' + currentChannel + '/messages/' + name));
-      
+
       set(messageRef, {
         contenu: msg,
         expediteur: currentUser.email,
@@ -883,7 +876,7 @@
         console.error("Erreur:", error);
         alert("Erreur lors de l'envoi du message.");
       });
-    }
+    };
 
     function renderMessages() {
       if (!currentChannel) return;
@@ -897,10 +890,9 @@
       messagesListenerRef = ref(db, 'channels/' + currentChannel + '/messages');
       onValue(messagesListenerRef, (snapshot) => {
         const rawData = snapshot.val() || {};
-        data = rawData;
         container.innerHTML = "";
 
-        const sorted = Object.entries(data).sort((a, b) =>
+        const sorted = Object.entries(rawData).sort((a, b) =>
           Object.keys(b[1]).length - Object.keys(a[1]).length
         );
 
@@ -917,7 +909,7 @@
           messages.forEach((m, i) => {
             const msg = document.createElement('div');
             msg.className = 'message';
-            
+
             let emailInfo = '';
             if (m.expediteur) {
               emailInfo = ` (📧 ${m.expediteur})`;
@@ -942,12 +934,10 @@
 
       top3.forEach(([name, messagesObj]) => {
         const messages = Object.values(messagesObj);
-
         const bar = document.createElement('div');
         bar.className = 'bar';
         const height = Math.min(messages.length * 20, 180);
-        bar.style.setProperty('--height', `${height}px`);
-        bar.style.height = `${height}px`;
+        bar.style.height = height + 'px';
 
         const nameLabel = document.createElement('div');
         nameLabel.textContent = name;
@@ -961,7 +951,7 @@
       });
     }
 
-    window.filterNames = function () {
+    window.filterNames = function() {
       const filter = document.getElementById("search").value.toLowerCase();
       const persons = document.getElementsByClassName("person");
 
@@ -969,26 +959,9 @@
         const name = p.querySelector("h2").textContent.toLowerCase();
         p.style.display = name.includes(filter) ? "block" : "none";
       });
-    }
+    };
 
-    // ===================== INITIALISATION =====================
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        currentUser = user;
-        console.log("Utilisateur connecté:", user.email);
-        document.getElementById('loginPrompt')?.remove();
-        updateUserDisplay();
-        if (currentChannel) {
-          renderMessages();
-        }
-      } else {
-        currentUser = null;
-        document.getElementById('userDisplay')?.remove();
-        // Essayer de se connecter silencieusement
-        setTimeout(signInSilently, 500);
-      }
-    });
+    // ===== INITIALISATION =====
 
     async function initCanal() {
       const params = new URLSearchParams(window.location.search);
@@ -1013,7 +986,48 @@
       }
     }
 
+    // Écouteur d'état d'authentification
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        updateUserDisplay(user);
+        console.log("✅ Connecté:", user.email);
+        if (currentChannel) {
+          renderMessages();
+        }
+      } else {
+        currentUser = null;
+        updateUserDisplay(null);
+        console.log("🔓 Non connecté");
+        // Afficher le bouton de connexion
+        document.getElementById('loginSection').style.display = 'block';
+        const status = document.getElementById('loginStatus');
+        status.className = 'error';
+        status.textContent = '🔐 Connectez-vous pour utiliser l\'application';
+      }
+    });
+
+    // Gérer le retour de redirection
+    getRedirectResult(auth).then((result) => {
+      if (result) {
+        currentUser = result.user;
+        updateUserDisplay(result.user);
+        console.log("✅ Connecté après redirection:", result.user.email);
+        if (currentChannel) {
+          renderMessages();
+        }
+      }
+    }).catch((error) => {
+      console.error("Erreur de retour de redirection:", error);
+      const status = document.getElementById('loginStatus');
+      status.className = 'error';
+      status.textContent = '❌ Erreur de connexion: ' + error.message;
+    });
+
+    // Initialisation
     initCanal();
+
+    console.log("🚀 AnonTalk chargé !");
   </script>
 
 </body>
