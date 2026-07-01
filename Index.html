@@ -419,6 +419,15 @@
       font-weight: bold;
     }
 
+    .error-msg {
+      background: #ffe6e6;
+      color: #cc0000;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      display: none;
+    }
+
     @media (max-width: 600px) {
       body {
         padding-top: 65px;
@@ -481,9 +490,9 @@
     }
   </style>
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -498,6 +507,7 @@
       <div id="userInfo" style="display:none;">
         <img id="userAvatar" src="" alt="Avatar">
         <span id="userEmail"></span>
+        <button class="secondary" style="padding:5px 12px;font-size:0.8em;" onclick="signOutUser()">Déconnexion</button>
       </div>
     </div>
   </header>
@@ -517,6 +527,8 @@
       <h2>Bienvenue sur AnonTalk</h2>
       <p>Connectez-vous avec votre compte Google pour accéder à la messagerie anonyme.</p>
       
+      <div id="errorMsg" class="error-msg"></div>
+
       <div id="emailDetected" style="display:none;">
         <p style="color: #555; margin: 10px 0;">Email détecté :</p>
         <div class="email-display" id="detectedEmail"></div>
@@ -526,7 +538,7 @@
         </button>
       </div>
 
-      <button class="google-btn" id="signInBtn" onclick="signInWithGoogle()" style="display:none;">
+      <button class="google-btn" id="signInBtn" onclick="signInWithGoogle()">
         <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 0 0 0 24c0 3.77.87 7.35 2.56 10.56l7.97-5.97z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.97C6.51 42.62 14.62 48 24 48z"/></svg>
         Se connecter avec Google
       </button>
@@ -576,8 +588,8 @@
       <div id="channelBar">
         <span>📢 Canal : <span id="currentChannelLabel"></span></span>
         <div>
-          <button class="secondary" onclick="copyCurrentLink()"> Copier le lien du canal</button>
-          <button class="secondary" onclick="quitChannel()"> Changer de canal</button>
+          <button class="secondary" onclick="copyCurrentLink()"> Copier le lien</button>
+          <button class="secondary" onclick="quitChannel()"> Changer</button>
         </div>
       </div>
 
@@ -592,8 +604,8 @@
       </div>
 
       <div id="actions">
-        <button onclick="showWrite()"> Écrire un message</button>
-        <button onclick="showRead()"> Lire les messages</button>
+        <button onclick="showWrite()"> ✏️ Écrire</button>
+        <button onclick="showRead()"> 📖 Lire</button>
       </div>
 
       <input type="text" id="search" oninput="filterNames()" placeholder="🔍 Rechercher un nom...">
@@ -602,7 +614,7 @@
         <h2>✏️ Écrire un message</h2>
         <input id="targetName" placeholder="👤 Nom du camarade" />
         <textarea id="messageInput" placeholder="💬 Ton message..." rows="4" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; resize: vertical;"></textarea>
-        <button onclick="addMessage()"> Envoyer</button>
+        <button onclick="addMessage()"> 📤 Envoyer</button>
       </div>
 
       <div id="readSection" style="display:none;"></div>
@@ -611,25 +623,23 @@
 
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getDatabase, ref, push, set, onValue, get, off, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
+  <script>
+    // Configuration Firebase - Remplacez par VOS propres valeurs
     const firebaseConfig = {
-      apiKey: "AIzaSyCEGRun9252XubXes04HWXIMd81Y7KRdHY",
-      authDomain: "messageanonyme-cbea0.firebaseapp.com",
-      projectId: "messageanonyme-cbea0",
-      storageBucket: "messageanonyme-cbea0.appspot.com",
-      messagingSenderId: "1004776990918",
-      appId: "1:1004776990918:web:767fdc00a7c2b1f088cfc7",
-      databaseURL: "https://messageanonyme-cbea0-default-rtdb.firebaseio.com"
-    };
+  apiKey: "AIzaSyCEGRun9252XubXesO4HWXIMd8lY7KRdHY",
+  authDomain: "messageanonyme-cbea0.firebaseapp.com",
+  databaseURL: "https://messageanonyme-cbea0-default-rtdb.firebaseio.com",
+  projectId: "messageanonyme-cbea0",
+  storageBucket: "messageanonyme-cbea0.firebasestorage.app",
+  messagingSenderId: "1004776990918",
+  appId: "1:1004776990918:web:767fdc00a7c2b1f088cfc7"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+    // Initialiser Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
 
     let currentChannel = null;
     let messagesListenerRef = null;
@@ -696,8 +706,8 @@
     window.createChannel = async function() {
       const id = genererIdCanal();
       try {
-        await set(ref(db, 'channels/' + id + '/meta'), {
-          createdAt: serverTimestamp()
+        await db.ref('channels/' + id + '/meta').set({
+          createdAt: firebase.database.ServerValue.TIMESTAMP
         });
       } catch (e) {
         alert("Erreur lors de la création du canal.");
@@ -716,7 +726,7 @@
       if (!idInput) return alert("Entre un identifiant de canal.");
 
       try {
-        const snap = await get(ref(db, 'channels/' + idInput + '/meta'));
+        const snap = await db.ref('channels/' + idInput + '/meta').once('value');
         if (!snap.exists()) {
           alert("Canal introuvable. Vérifie l'identifiant.");
           return;
@@ -732,7 +742,7 @@
 
     window.quitChannel = function() {
       if (messagesListenerRef) {
-        off(messagesListenerRef);
+        messagesListenerRef.off();
         messagesListenerRef = null;
       }
       currentChannel = null;
@@ -806,11 +816,11 @@
         return;
       }
 
-      const messageRef = push(ref(db, 'channels/' + currentChannel + '/messages/' + name));
+      const messageRef = db.ref('channels/' + currentChannel + '/messages/' + name).push();
 
-      set(messageRef, {
+      messageRef.set({
         contenu: msg,
-        timestamp: serverTimestamp(),
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
         email: currentUser.email,
         userId: currentUser.uid,
         displayName: currentUser.displayName || "Anonyme"
@@ -830,11 +840,11 @@
       container.innerHTML = "";
 
       if (messagesListenerRef) {
-        off(messagesListenerRef);
+        messagesListenerRef.off();
       }
 
-      messagesListenerRef = ref(db, 'channels/' + currentChannel + '/messages');
-      onValue(messagesListenerRef, (snapshot) => {
+      messagesListenerRef = db.ref('channels/' + currentChannel + '/messages');
+      messagesListenerRef.on('value', (snapshot) => {
         const rawData = snapshot.val() || {};
         container.innerHTML = "";
 
@@ -856,8 +866,6 @@
             const msg = document.createElement('div');
             msg.className = 'message';
             msg.textContent = `#${i + 1}: ${m.contenu || m}`;
-            // Pour l'admin, on peut afficher l'email dans la console ou en commentaire
-            // console.log(`Message de ${m.email || 'inconnu'}: ${m.contenu}`);
             block.appendChild(msg);
           });
 
@@ -903,72 +911,80 @@
 
     // Fonctions d'authentification
     window.signInWithGoogle = async function() {
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.style.display = 'none';
+      
       try {
-        const result = await signInWithPopup(auth, provider);
-        console.log("Utilisateur connecté:", result.user);
+        const result = await auth.signInWithPopup(provider);
+        console.log("✅ Utilisateur connecté:", result.user.email);
       } catch (error) {
         console.error("Erreur de connexion:", error);
-        alert("Erreur lors de la connexion: " + error.message);
+        errorMsg.textContent = "Erreur: " + error.message;
+        errorMsg.style.display = 'block';
+        
+        if (error.code === 'auth/api-key-not-valid-please-pass-a-valid-api-key') {
+          errorMsg.textContent = "⚠️ Erreur de configuration Firebase. Veuillez vérifier votre clé API dans la console Firebase.";
+        }
       }
     };
 
     window.continueWithGoogle = function() {
-      // Même fonction que signInWithGoogle, mais appelée depuis le bouton "Continuer"
       signInWithGoogle();
     };
 
-    // Écouter les changements d'état d'authentification
-    onAuthStateChanged(auth, (user) => {
+    window.signOutUser = function() {
+      auth.signOut().then(() => {
+        console.log("🔴 Utilisateur déconnecté");
+      }).catch(error => {
+        console.error("Erreur de déconnexion:", error);
+      });
+    };
+
+    // Vérifier l'état de connexion
+    auth.onAuthStateChanged((user) => {
       const authSection = document.getElementById('authSection');
       const landingSection = document.getElementById('landingSection');
       const userInfo = document.getElementById('userInfo');
       const signInBtn = document.getElementById('signInBtn');
       const emailDetected = document.getElementById('emailDetected');
       const detectedEmail = document.getElementById('detectedEmail');
+      const errorMsg = document.getElementById('errorMsg');
 
       if (user) {
         currentUser = user;
         console.log("✅ Utilisateur connecté:", user.email);
-        console.log("UID:", user.uid);
-        console.log("DisplayName:", user.displayName);
 
         // Sauvegarder l'utilisateur dans la base de données
-        const userRef = ref(db, 'users/' + user.uid);
-        set(userRef, {
+        const userRef = db.ref('users/' + user.uid);
+        userRef.set({
           email: user.email,
           displayName: user.displayName || "Anonyme",
-          lastLogin: serverTimestamp(),
+          lastLogin: firebase.database.ServerValue.TIMESTAMP,
           photoURL: user.photoURL || ""
         }).catch(err => console.error("Erreur sauvegarde utilisateur:", err));
 
-        // Afficher les infos utilisateur dans le header
+        // Afficher les infos utilisateur
         userInfo.style.display = 'flex';
         document.getElementById('userEmail').textContent = user.email;
         if (user.photoURL) {
           document.getElementById('userAvatar').src = user.photoURL;
+          document.getElementById('userAvatar').style.display = 'block';
         } else {
-          document.getElementById('userAvatar').src = '';
           document.getElementById('userAvatar').style.display = 'none';
         }
 
-        // Cacher la section auth, afficher la section landing
         authSection.style.display = 'none';
         landingSection.style.display = 'block';
         signInBtn.style.display = 'none';
         emailDetected.style.display = 'none';
+        errorMsg.style.display = 'none';
 
-        // Initialiser le canal si présent
         initCanal();
 
       } else {
         currentUser = null;
         console.log("🔴 Utilisateur déconnecté");
 
-        // Vérifier si un email est détecté (via les cookies ou autre)
-        // Dans un navigateur, on peut utiliser l'API navigator.credentials
-        // Mais pour simplifier, on affiche juste le bouton de connexion
-
-        // Afficher la section auth
         authSection.style.display = 'block';
         landingSection.style.display = 'none';
         document.getElementById('appSection').style.display = 'none';
@@ -987,7 +1003,7 @@
       if (!idCible) return;
 
       try {
-        const snap = await get(ref(db, 'channels/' + idCible + '/meta'));
+        const snap = await db.ref('channels/' + idCible + '/meta').once('value');
         if (snap.exists()) {
           entrerDansCanal(idCible);
         } else {
@@ -1000,9 +1016,6 @@
         console.error(e);
       }
     }
-
-    // Vérifier si l'utilisateur est déjà connecté au chargement
-    // La fonction onAuthStateChanged s'en charge
 
     console.log("🚀 AnonTalk chargé !");
     console.log("🔐 Authentification Google activée");
