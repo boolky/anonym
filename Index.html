@@ -165,6 +165,23 @@
       background-color: #777;
     }
 
+    button.google-btn {
+      background-color: #4285f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 24px;
+      font-size: 1.05em;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    button.google-btn:hover {
+      background-color: #357ae8;
+    }
+
     input, textarea {
       font-family: inherit;
       font-size: 1em;
@@ -358,6 +375,50 @@
       margin: 0;
     }
 
+    #userInfo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    #userInfo img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    #authSection {
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px 20px 35px;
+      margin: 25px 0;
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    #authSection h2 {
+      color: #215ce6;
+      margin-bottom: 15px;
+    }
+
+    #authSection p {
+      color: #555;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    #authSection .email-display {
+      background: #f0f4ff;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-size: 1.1em;
+      color: #215ce6;
+      font-weight: bold;
+    }
+
     @media (max-width: 600px) {
       body {
         padding-top: 65px;
@@ -408,49 +469,21 @@
         width: 24px;
         height: 24px;
       }
+
+      .header-content {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      #userInfo {
+        font-size: 0.8em;
+      }
     }
-
-    .landing-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 30px 20px 35px;
-  margin: 25px 0;
-  box-shadow: 0 0 10px rgba(0,0,0,0.08);
-  text-align: center;
-}
-
-.landing-card h2 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  color: #215ce6;
-  font-size: 1.2em;
-}
-
-.landing-card p {
-  margin-bottom: 20px;
-  color: #555;
-  line-height: 1.6;
-}
-
-.landing-card input {
-  width: 80%;
-  padding: 12px;
-  margin: 12px 0 18px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.landing-card button {
-  margin-top: 8px;
-  padding: 12px 35px;
-  font-size: 1.05em;
-}
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
 </head>
 <body>
 
@@ -458,19 +491,52 @@
     <div class="header-content">
       <div class="brand">
         <div class="brand-logo">
-          <img src="image/im.jpeg" alt="Logo" width="32" height="32">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='3' y='8' width='42' height='27' rx='9' fill='%230077cc'/%3E%3Cpath d='M13 35 L13 43 L21 35' fill='%230077cc'/%3E%3Crect x='11' y='17' width='11' height='6' rx='3' fill='white'/%3E%3Crect x='26' y='17' width='11' height='6' rx='3' fill='white'/%3E%3Crect x='22' y='19' width='4' height='2' fill='white'/%3E%3C/svg%3E" alt="Logo" width="32" height="32">
         </div>
         <h1 class="brand-name">Anon<span>Talk</span></h1>
+      </div>
+      <div id="userInfo" style="display:none;">
+        <img id="userAvatar" src="" alt="Avatar">
+        <span id="userEmail"></span>
       </div>
     </div>
   </header>
 
   <div class="container">
 
-    <div id="landingSection">
+    <!-- Section Authentification -->
+    <div id="authSection">
       <div class="brand">
         <div class="brand-logo">
-          <img src="image/im.jpeg" alt="Logo" width="56" height="56">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='3' y='8' width='42' height='27' rx='9' fill='%230077cc'/%3E%3Cpath d='M13 35 L13 43 L21 35' fill='%230077cc'/%3E%3Crect x='11' y='17' width='11' height='6' rx='3' fill='white'/%3E%3Crect x='26' y='17' width='11' height='6' rx='3' fill='white'/%3E%3Crect x='22' y='19' width='4' height='2' fill='white'/%3E%3C/svg%3E" alt="Logo" width="56" height="56">
+        </div>
+        <h1 class="brand-name">Anon<span>Talk</span></h1>
+      </div>
+      <div class="badge-anonyme">🔒 Connexion sécurisée</div>
+
+      <h2>Bienvenue sur AnonTalk</h2>
+      <p>Connectez-vous avec votre compte Google pour accéder à la messagerie anonyme.</p>
+      
+      <div id="emailDetected" style="display:none;">
+        <p style="color: #555; margin: 10px 0;">Email détecté :</p>
+        <div class="email-display" id="detectedEmail"></div>
+        <button class="google-btn" onclick="continueWithGoogle()">
+          <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 0 0 0 24c0 3.77.87 7.35 2.56 10.56l7.97-5.97z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.97C6.51 42.62 14.62 48 24 48z"/></svg>
+          Continuer avec Google
+        </button>
+      </div>
+
+      <button class="google-btn" id="signInBtn" onclick="signInWithGoogle()" style="display:none;">
+        <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 0 0 0 24c0 3.77.87 7.35 2.56 10.56l7.97-5.97z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.97C6.51 42.62 14.62 48 24 48z"/></svg>
+        Se connecter avec Google
+      </button>
+    </div>
+
+    <!-- Section Landing (canaux) -->
+    <div id="landingSection" style="display:none;">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='3' y='8' width='42' height='27' rx='9' fill='%230077cc'/%3E%3Cpath d='M13 35 L13 43 L21 35' fill='%230077cc'/%3E%3Crect x='11' y='17' width='11' height='6' rx='3' fill='white'/%3E%3Crect x='26' y='17' width='11' height='6' rx='3' fill='white'/%3E%3Crect x='22' y='19' width='4' height='2' fill='white'/%3E%3C/svg%3E" alt="Logo" width="56" height="56">
         </div>
         <h1 class="brand-name">Anon<span>Talk</span></h1>
       </div>
@@ -492,6 +558,7 @@
       </div>
     </div>
 
+    <!-- Modal création canal -->
     <div id="channelCreatedModal" class="modal-overlay" style="display:none;">
       <div class="modal-box">
         <h2>✅ Canal créé !</h2>
@@ -504,28 +571,29 @@
       </div>
     </div>
 
+    <!-- Section Application -->
     <div id="appSection" style="display:none;">
       <div id="channelBar">
         <span>📢 Canal : <span id="currentChannelLabel"></span></span>
         <div>
-          <button class="secondary" onclick="copyCurrentLink()">📋 Copier le lien</button>
-          <button class="secondary" onclick="quitChannel()">🚪 Changer de canal</button>
+          <button class="secondary" onclick="copyCurrentLink()"> Copier le lien du canal</button>
+          <button class="secondary" onclick="quitChannel()"> Changer de canal</button>
         </div>
       </div>
 
       <h1 class="small">Anon<span style="color:#0077cc;">Talk</span></h1>
 
       <div class="instructions">
-        <strong>📖 Comment ça marche ?</strong>
+        <strong> Comment ça marche ?</strong>
         <ul>
-          <li>📝 Pour <strong>écrire</strong> : cliquez sur <span class="pill">Écrire un message</span>, indiquez le nom du destinataire, rédigez et envoyez.</li>
-          <li>📖 Pour <strong>lire</strong> : cliquez sur <span class="pill">Lire les messages</span>. Utilisez la barre de recherche pour filtrer par nom.</li>
+          <li> Pour <strong>écrire</strong> : cliquez sur <span class="pill">Écrire un message</span>, indiquez le nom du destinataire, rédigez et envoyez.</li>
+          <li> Pour <strong>lire</strong> : cliquez sur <span class="pill">Lire les messages</span>. Utilisez la barre de recherche pour filtrer par nom.</li>
         </ul>
       </div>
 
       <div id="actions">
-        <button onclick="showWrite()">✏️ Écrire un message</button>
-        <button onclick="showRead()">📖 Lire les messages</button>
+        <button onclick="showWrite()"> Écrire un message</button>
+        <button onclick="showRead()"> Lire les messages</button>
       </div>
 
       <input type="text" id="search" oninput="filterNames()" placeholder="🔍 Rechercher un nom...">
@@ -534,7 +602,7 @@
         <h2>✏️ Écrire un message</h2>
         <input id="targetName" placeholder="👤 Nom du camarade" />
         <textarea id="messageInput" placeholder="💬 Ton message..." rows="4" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; resize: vertical;"></textarea>
-        <button onclick="addMessage()">📤 Envoyer</button>
+        <button onclick="addMessage()"> Envoyer</button>
       </div>
 
       <div id="readSection" style="display:none;"></div>
@@ -546,6 +614,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getDatabase, ref, push, set, onValue, get, off, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCEGRun9252XubXes04HWXIMd81Y7KRdHY",
@@ -559,9 +628,12 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
     let currentChannel = null;
     let messagesListenerRef = null;
+    let currentUser = null;
 
     const motsInterdits = [
       "con", "merde", "putain", "enculé", "salope", "nique", "fdp", "bâtard", "raciste", "suicide",
@@ -719,6 +791,11 @@
         return;
       }
 
+      if (!currentUser) {
+        alert("Vous devez être connecté pour envoyer un message.");
+        return;
+      }
+
       const name = document.getElementById('targetName').value.trim();
       const msg = document.getElementById('messageInput').value.trim();
 
@@ -733,7 +810,10 @@
 
       set(messageRef, {
         contenu: msg,
-        timestamp: serverTimestamp()
+        timestamp: serverTimestamp(),
+        email: currentUser.email,
+        userId: currentUser.uid,
+        displayName: currentUser.displayName || "Anonyme"
       }).then(() => {
         document.getElementById('targetName').value = "";
         document.getElementById('messageInput').value = "";
@@ -776,6 +856,8 @@
             const msg = document.createElement('div');
             msg.className = 'message';
             msg.textContent = `#${i + 1}: ${m.contenu || m}`;
+            // Pour l'admin, on peut afficher l'email dans la console ou en commentaire
+            // console.log(`Message de ${m.email || 'inconnu'}: ${m.contenu}`);
             block.appendChild(msg);
           });
 
@@ -819,6 +901,83 @@
       });
     };
 
+    // Fonctions d'authentification
+    window.signInWithGoogle = async function() {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        console.log("Utilisateur connecté:", result.user);
+      } catch (error) {
+        console.error("Erreur de connexion:", error);
+        alert("Erreur lors de la connexion: " + error.message);
+      }
+    };
+
+    window.continueWithGoogle = function() {
+      // Même fonction que signInWithGoogle, mais appelée depuis le bouton "Continuer"
+      signInWithGoogle();
+    };
+
+    // Écouter les changements d'état d'authentification
+    onAuthStateChanged(auth, (user) => {
+      const authSection = document.getElementById('authSection');
+      const landingSection = document.getElementById('landingSection');
+      const userInfo = document.getElementById('userInfo');
+      const signInBtn = document.getElementById('signInBtn');
+      const emailDetected = document.getElementById('emailDetected');
+      const detectedEmail = document.getElementById('detectedEmail');
+
+      if (user) {
+        currentUser = user;
+        console.log("✅ Utilisateur connecté:", user.email);
+        console.log("UID:", user.uid);
+        console.log("DisplayName:", user.displayName);
+
+        // Sauvegarder l'utilisateur dans la base de données
+        const userRef = ref(db, 'users/' + user.uid);
+        set(userRef, {
+          email: user.email,
+          displayName: user.displayName || "Anonyme",
+          lastLogin: serverTimestamp(),
+          photoURL: user.photoURL || ""
+        }).catch(err => console.error("Erreur sauvegarde utilisateur:", err));
+
+        // Afficher les infos utilisateur dans le header
+        userInfo.style.display = 'flex';
+        document.getElementById('userEmail').textContent = user.email;
+        if (user.photoURL) {
+          document.getElementById('userAvatar').src = user.photoURL;
+        } else {
+          document.getElementById('userAvatar').src = '';
+          document.getElementById('userAvatar').style.display = 'none';
+        }
+
+        // Cacher la section auth, afficher la section landing
+        authSection.style.display = 'none';
+        landingSection.style.display = 'block';
+        signInBtn.style.display = 'none';
+        emailDetected.style.display = 'none';
+
+        // Initialiser le canal si présent
+        initCanal();
+
+      } else {
+        currentUser = null;
+        console.log("🔴 Utilisateur déconnecté");
+
+        // Vérifier si un email est détecté (via les cookies ou autre)
+        // Dans un navigateur, on peut utiliser l'API navigator.credentials
+        // Mais pour simplifier, on affiche juste le bouton de connexion
+
+        // Afficher la section auth
+        authSection.style.display = 'block';
+        landingSection.style.display = 'none';
+        document.getElementById('appSection').style.display = 'none';
+        userInfo.style.display = 'none';
+        signInBtn.style.display = 'block';
+        emailDetected.style.display = 'none';
+      }
+    });
+
     async function initCanal() {
       const params = new URLSearchParams(window.location.search);
       const idUrl = params.get('canal');
@@ -842,9 +1001,11 @@
       }
     }
 
-    initCanal();
+    // Vérifier si l'utilisateur est déjà connecté au chargement
+    // La fonction onAuthStateChanged s'en charge
 
     console.log("🚀 AnonTalk chargé !");
+    console.log("🔐 Authentification Google activée");
   </script>
 
 </body>
