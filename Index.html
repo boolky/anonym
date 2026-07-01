@@ -30,7 +30,6 @@
       padding: 20px;
     }
 
-    /* ---- Marque / logo ---- */
     .brand {
       display: flex;
       flex-direction: column;
@@ -102,7 +101,6 @@
       margin-bottom: 15px;
     }
 
-    /* ---- Instructions ---- */
     .instructions {
       background: #fffaf0;
       border: 1px solid #f1e3c2;
@@ -167,23 +165,6 @@
       background-color: #777;
     }
 
-    button.google-btn {
-      background: #4285f4;
-      color: white;
-      padding: 12px 40px;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.1em;
-      cursor: pointer;
-      display: block;
-      margin: 15px auto;
-      width: fit-content;
-    }
-
-    button.google-btn:hover {
-      background: #3367d6;
-    }
-
     input, textarea {
       font-family: inherit;
       font-size: 1em;
@@ -222,11 +203,6 @@
       font-size: 0.95em;
     }
 
-    .message.mine {
-      background-color: #d4edda;
-      border-left: 4px solid #28a745;
-    }
-
     #chart {
       display: flex;
       justify-content: center;
@@ -251,7 +227,6 @@
       transition: height 0.5s ease;
     }
 
-    /* ---- Canaux ---- */
     .landing-card {
       background: #fff;
       border-radius: 10px;
@@ -334,7 +309,6 @@
       margin-bottom: 15px;
     }
 
-    /* ---- Header fixe ---- */
     .main-header {
       position: fixed;
       top: 0;
@@ -384,59 +358,6 @@
       margin: 0;
     }
 
-    #userDisplay {
-      font-size: 0.75em;
-      color: #555;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #f0f4ff;
-      padding: 4px 12px 4px 8px;
-      border-radius: 20px;
-    }
-
-    #userDisplay img {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: 2px solid #0077cc;
-    }
-
-    .user-email {
-      max-width: 150px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    #loginSection {
-      text-align: center;
-      margin: 10px 0;
-    }
-
-    #loginStatus {
-      text-align: center;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      font-size: 0.95em;
-    }
-
-    #loginStatus.loading {
-      background: #e3f2fd;
-      color: #0d47a1;
-    }
-
-    #loginStatus.connected {
-      background: #e8f5e9;
-      color: #1b5e20;
-    }
-
-    #loginStatus.error {
-      background: #ffebee;
-      color: #b71c1c;
-    }
-
     @media (max-width: 600px) {
       body {
         padding-top: 65px;
@@ -474,16 +395,6 @@
         width: 100%;
       }
 
-      #userDisplay {
-        font-size: 0.65em;
-        padding: 3px 8px 3px 5px;
-      }
-
-      #userDisplay img {
-        width: 20px;
-        height: 20px;
-      }
-
       .main-header .brand-name {
         font-size: 1.1em;
       }
@@ -497,20 +408,52 @@
         width: 24px;
         height: 24px;
       }
-
-      .user-email {
-        max-width: 100px;
-      }
     }
+
+    .landing-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px 20px 35px;
+  margin: 25px 0;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.landing-card h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #215ce6;
+  font-size: 1.2em;
+}
+
+.landing-card p {
+  margin-bottom: 20px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.landing-card input {
+  width: 80%;
+  padding: 12px;
+  margin: 12px 0 18px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.landing-card button {
+  margin-top: 8px;
+  padding: 12px 35px;
+  font-size: 1.05em;
+}
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
 </head>
 <body>
 
-  <!-- ===== HEADER FIXE ===== -->
   <header class="main-header">
     <div class="header-content">
       <div class="brand">
@@ -519,16 +462,11 @@
         </div>
         <h1 class="brand-name">Anon<span>Talk</span></h1>
       </div>
-      <div id="userDisplay" style="display:none;">
-        <span class="user-email"></span>
-        <img src="" alt="Avatar">
-      </div>
     </div>
   </header>
 
   <div class="container">
 
-    <!-- ===== ÉCRAN D'ACCUEIL : CRÉER OU REJOINDRE UN CANAL ===== -->
     <div id="landingSection">
       <div class="brand">
         <div class="brand-logo">
@@ -539,16 +477,6 @@
       <div class="badge-anonyme">100% anonyme — aucune inscription requise</div>
 
       <p class="sub">Crée un canal pour ta classe/groupe, ou rejoins-en un avec son identifiant.</p>
-
-      <!-- Status de connexion -->
-      <div id="loginStatus" class="loading">🔄 Vérification de la connexion...</div>
-
-      <!-- Bouton de connexion -->
-      <div id="loginSection" style="display:none;">
-        <button class="google-btn" onclick="window.signInWithGoogle()">
-          🔐 Se connecter avec Google
-        </button>
-      </div>
 
       <div class="landing-card">
         <h2>🆕 Créer un nouveau canal</h2>
@@ -564,7 +492,6 @@
       </div>
     </div>
 
-    <!-- ===== MODALE : CANAL CRÉÉ AVEC SUCCÈS ===== -->
     <div id="channelCreatedModal" class="modal-overlay" style="display:none;">
       <div class="modal-box">
         <h2>✅ Canal créé !</h2>
@@ -577,7 +504,6 @@
       </div>
     </div>
 
-    <!-- ===== APPLICATION (à l'intérieur d'un canal) ===== -->
     <div id="appSection" style="display:none;">
       <div id="channelBar">
         <span>📢 Canal : <span id="currentChannelLabel"></span></span>
@@ -620,9 +546,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getDatabase, ref, push, set, onValue, get, off, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-    import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-    // ===== CONFIGURATION FIREBASE =====
     const firebaseConfig = {
       apiKey: "AIzaSyCEGRun9252XubXes04HWXIMd81Y7KRdHY",
       authDomain: "messageanonyme-cbea0.firebaseapp.com",
@@ -635,15 +559,10 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
 
-    // ===== VARIABLES GLOBALES =====
-    let currentUser = null;
     let currentChannel = null;
     let messagesListenerRef = null;
 
-    // ===== MOTS INTERDITS =====
     const motsInterdits = [
       "con", "merde", "putain", "enculé", "salope", "nique", "fdp", "bâtard", "raciste", "suicide",
       "connard", "connasse", "imbécile", "débile", "crétin", "idiot", "nul", "minable", "taré",
@@ -665,38 +584,6 @@
       const msg = message.toLowerCase();
       return motsInterdits.some(mot => msg.includes(mot));
     }
-
-    // ===== AUTHENTIFICATION =====
-
-    // Fonction de connexion avec redirection
-    window.signInWithGoogle = function() {
-      const status = document.getElementById('loginStatus');
-      status.className = 'loading';
-      status.textContent = '🔄 Redirection vers Google...';
-      signInWithRedirect(auth, provider);
-    };
-
-    // Mettre à jour l'affichage de l'utilisateur
-    function updateUserDisplay(user) {
-      const display = document.getElementById('userDisplay');
-      if (user) {
-        display.style.display = 'flex';
-        display.querySelector('.user-email').textContent = user.email;
-        display.querySelector('img').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=0077cc&color=fff&size=32`;
-        document.getElementById('loginSection').style.display = 'none';
-        const status = document.getElementById('loginStatus');
-        status.className = 'connected';
-        status.textContent = '✅ Connecté avec ' + user.email;
-      } else {
-        display.style.display = 'none';
-        document.getElementById('loginSection').style.display = 'block';
-        const status = document.getElementById('loginStatus');
-        status.className = 'error';
-        status.textContent = '🔐 Non connecté';
-      }
-    }
-
-    // ===== GESTION DES CANAUX =====
 
     function genererIdCanal(longueur = 6) {
       const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -731,22 +618,14 @@
       document.getElementById('chart').innerHTML = '';
       document.getElementById('readSection').innerHTML = '';
 
-      if (currentUser) {
-        renderMessages();
-      }
+      renderMessages();
     }
 
     window.createChannel = async function() {
-      if (!currentUser) {
-        alert("Veuillez vous connecter avec Google avant de créer un canal.");
-        return;
-      }
-
       const id = genererIdCanal();
       try {
         await set(ref(db, 'channels/' + id + '/meta'), {
-          createdAt: serverTimestamp(),
-          createdBy: currentUser.email
+          createdAt: serverTimestamp()
         });
       } catch (e) {
         alert("Erreur lors de la création du canal.");
@@ -761,11 +640,6 @@
     };
 
     window.joinChannel = async function() {
-      if (!currentUser) {
-        alert("Veuillez vous connecter avec Google avant de rejoindre un canal.");
-        return;
-      }
-
       const idInput = document.getElementById('joinChannelInput').value.trim().toUpperCase();
       if (!idInput) return alert("Entre un identifiant de canal.");
 
@@ -826,8 +700,6 @@
       entrerDansCanal(id);
     };
 
-    // ===== MESSAGES =====
-
     window.showWrite = function() {
       document.getElementById('writeSection').style.display = 'block';
       document.getElementById('readSection').style.display = 'none';
@@ -847,11 +719,6 @@
         return;
       }
 
-      if (!currentUser) {
-        alert("Veuillez vous connecter avec Google avant d'envoyer un message.");
-        return;
-      }
-
       const name = document.getElementById('targetName').value.trim();
       const msg = document.getElementById('messageInput').value.trim();
 
@@ -866,7 +733,6 @@
 
       set(messageRef, {
         contenu: msg,
-        expediteur: currentUser.email,
         timestamp: serverTimestamp()
       }).then(() => {
         document.getElementById('targetName').value = "";
@@ -909,15 +775,7 @@
           messages.forEach((m, i) => {
             const msg = document.createElement('div');
             msg.className = 'message';
-
-            let emailInfo = '';
-            if (m.expediteur) {
-              emailInfo = ` (📧 ${m.expediteur})`;
-              if (currentUser && m.expediteur === currentUser.email) {
-                msg.classList.add('mine');
-              }
-            }
-            msg.textContent = `#${i + 1}: ${m.contenu || m}${emailInfo}`;
+            msg.textContent = `#${i + 1}: ${m.contenu || m}`;
             block.appendChild(msg);
           });
 
@@ -961,8 +819,6 @@
       });
     };
 
-    // ===== INITIALISATION =====
-
     async function initCanal() {
       const params = new URLSearchParams(window.location.search);
       const idUrl = params.get('canal');
@@ -986,45 +842,6 @@
       }
     }
 
-    // Écouteur d'état d'authentification
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        currentUser = user;
-        updateUserDisplay(user);
-        console.log("✅ Connecté:", user.email);
-        if (currentChannel) {
-          renderMessages();
-        }
-      } else {
-        currentUser = null;
-        updateUserDisplay(null);
-        console.log("🔓 Non connecté");
-        // Afficher le bouton de connexion
-        document.getElementById('loginSection').style.display = 'block';
-        const status = document.getElementById('loginStatus');
-        status.className = 'error';
-        status.textContent = '🔐 Connectez-vous pour utiliser l\'application';
-      }
-    });
-
-    // Gérer le retour de redirection
-    getRedirectResult(auth).then((result) => {
-      if (result) {
-        currentUser = result.user;
-        updateUserDisplay(result.user);
-        console.log("✅ Connecté après redirection:", result.user.email);
-        if (currentChannel) {
-          renderMessages();
-        }
-      }
-    }).catch((error) => {
-      console.error("Erreur de retour de redirection:", error);
-      const status = document.getElementById('loginStatus');
-      status.className = 'error';
-      status.textContent = '❌ Erreur de connexion: ' + error.message;
-    });
-
-    // Initialisation
     initCanal();
 
     console.log("🚀 AnonTalk chargé !");
