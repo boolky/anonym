@@ -428,6 +428,11 @@
       display: none;
     }
 
+    /* Masquer complètement la section userInfo */
+    #userInfo {
+      display: none !important;
+    }
+
     @media (max-width: 600px) {
       body {
         padding-top: 65px;
@@ -504,7 +509,8 @@
         </div>
         <h1 class="brand-name">Anon<span>Talk</span></h1>
       </div>
-      <div id="userInfo" style="display:none;">
+      <!-- La section userInfo est maintenant complètement masquée via CSS -->
+      <div id="userInfo" style="display:none !important;">
         <img id="userAvatar" src="" alt="Avatar">
         <span id="userEmail"></span>
         <button class="secondary" style="padding:5px 12px;font-size:0.8em;" onclick="signOutUser()">Déconnexion</button>
@@ -963,15 +969,8 @@
           photoURL: user.photoURL || ""
         }).catch(err => console.error("Erreur sauvegarde utilisateur:", err));
 
-        // Afficher les infos utilisateur
-        userInfo.style.display = 'flex';
-        document.getElementById('userEmail').textContent = user.email;
-        if (user.photoURL) {
-          document.getElementById('userAvatar').src = user.photoURL;
-          document.getElementById('userAvatar').style.display = 'block';
-        } else {
-          document.getElementById('userAvatar').style.display = 'none';
-        }
+        // Masquer complètement les infos utilisateur
+        userInfo.style.display = 'none';
 
         authSection.style.display = 'none';
         landingSection.style.display = 'block';
